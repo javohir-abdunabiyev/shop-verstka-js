@@ -237,7 +237,7 @@ body.append(grid)
 function b() {
     const btn_five = document.querySelector('five')
     const all = document.querySelector('all')
-    for(let i = 0; i < 7; i++) {
+    for(let i = 0; i < arr.length; i++) {
         const item = arr[i]
 
         const block = document.createElement('div')
