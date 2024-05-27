@@ -1,6 +1,4 @@
-// Покажите товары по следующему массиву
-
-let arr = [{
+let goods = [{
     "id": 1,
     "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
     "price": 109.95,
@@ -220,74 +218,202 @@ let arr = [{
         "rate": 3.6,
         "count": 145
     }
-}]
+}];
+
+const btnShowFive = document.querySelector(".show-five")
+const btnShowAll = document.querySelector(".show-all")
+const container = document.querySelector(".container")
+const total = document.querySelector("#total")
+const menu_btn = document.querySelector("[data-menu]")
+const menu = document.querySelector("aside")
+const close_menu = document.querySelector('.close_menu')
 
 
 
-const body = document.querySelector('body')
 
-const grid = document.createElement('div')
+let cart = []
 
-grid.classList.add('for_grid')
-body.append(grid)
-
-
-
-
-function b() {
-    const btn_five = document.querySelector('five')
-    const all = document.querySelector('all')
-    for(let i = 0; i < arr.length; i++) {
-        const item = arr[i]
-
-        const block = document.createElement('div')
-        const imgs = document.createElement('div')
-        const sam_img = document.createElement('img')
-        const container = document.createElement('div')
-        const h1 = document.createElement('h1')
-        const p = document.createElement('p')
-        const about = document.createElement('div')
-        const btn = document.createElement('button')
-
-        btn.innerText = 'В Избранное'
-
-        sam_img.classList.add('img')
-        imgs.appendChild(sam_img)
-        grid.appendChild(block)
-        block.appendChild(imgs)
-
-        container.classList.add('container')
-        about.classList.add('about')
-        h1.classList.add('h1')
-        p.classList.add('p')
-        imgs.classList.add('imgs')
-
-        btn.classList.add('button')
-
-        block.classList.add('block')
-        sam_img.src = item.image
-        sam_img.alt = 'img'
-
-
-        h1.innerText = item.title
-        p.innerText = item.description
-        
-        for(let j = 0; j < 3; j++) {
-            const op = document.createElement('div')
-            op.classList.add('opp')
-            const op_img = document.createElement('img')
-            op_img.src = 'dollor.png'
-            op.innerText = '100'
-
-            about.append(op, op_img)
-        }
-        
-        container.append(h1, p, about, btn)
-        block.append(container)
-    }
-
-    
-
+btnShowFive.onclick = () => {
+    reload(goods.slice(0,5), container)
 }
 
-b()
+btnShowAll.onclick = () => {
+    reload(goods, container)
+}
+
+menu_btn.onclick = () => {
+    menu.classList.add('menu-opened')
+}
+
+close_menu.onclick = () => {
+    menu.classList.remove('menu-opened')
+}
+
+reload(goods, container)
+
+function reload(arr, place) {
+    place.innerHTML = ""
+
+    for (let itm of arr) {
+        let itmElem = document.createElement("div");
+        itmElem.classList.add("itm");
+
+        let itmHead = document.createElement("div");
+        itmHead.classList.add("itm-head");
+        let itemImage = document.createElement('img');
+        itemImage.src = itm.image;
+        itemImage.alt = itm.title;
+        itmHead.append(itemImage);
+        itmElem.append(itmHead);
+
+        let itmInfo = document.createElement('div');
+        itmInfo.classList.add('itm-info');
+
+        let hTr = document.createElement("h3");
+        hTr.innerHTML = itm.title;
+        let pElem = document.createElement("p");
+        pElem.innerHTML = itm.description;
+        itmInfo.append(hTr, pElem);
+
+        let info = document.createElement("div");
+        info.classList.add("info");
+        let infoItem = document.createElement("div");
+        infoItem.classList.add("info-item");
+
+        function createBox(src, text) {
+            let box = document.createElement("div");
+            box.classList.add("box");
+            let img = document.createElement("img");
+            img.src = src;
+            let h4 = document.createElement("h4");
+            h4.innerHTML = text;
+            box.append(img, h4);
+            return box;
+        }
+
+        let box = createBox("dollor.png", itm.price);
+        let boxTwo = createBox("star.svg", itm.rating.rate);
+        let boxTr = createBox("box.png", itm.rating.count);
+
+        infoItem.append(box);
+        infoItem.append(boxTwo);
+        infoItem.append(boxTr);
+        info.append(infoItem);
+        let button = document.createElement("button");
+        button.innerHTML = "В избранное";
+        info.append(button);
+        itmInfo.append(info);
+        itmElem.append(itmInfo);
+        place.append(itmElem);
+
+
+        button.onclick = () => {
+            const selected = Boolean(cart.find(el => el.id === itm.id))
+
+            if(selected) {
+                let idx = cart.indexOf(itm)
+                cart.splice(idx, 1)
+                button.innerHTML = "В избранное"
+                button.classList.remove('blue')
+             } else {
+                cart.push(itm)
+                button.innerHTML = "Добавлено"
+                button.classList.add('blue')
+
+                
+
+            }
+            total.innerHTML = cart.length
+        }
+    }
+}
+
+
+
+const menu_list = document.querySelector('.menu-list');
+
+
+
+for(let i = 0; i < 4; i++) {
+        const list_divs = document.createElement("div");
+        list_divs.classList.add("list_flex")
+
+        menu_list.append(list_divs)
+
+        const submit = document.createElement("input")
+        submit.type = "checkbox"
+        submit.checked = true
+        submit.style.width = "20px"
+
+        const list_img = document.createElement("img");
+        list_img.className = "list_img_width"
+        list_img.src = "img.jpg"
+        list_img.alt = "img.jpg"
+        const about = document.createElement("div");
+
+
+        const cart_txt = document.createElement("div")
+        cart_txt.classList.add("p")
+
+        cart_txt.innerText = "Шампунь для волос Garnier Fructis SOS, восстановление, 400 мл"
+        const div_two = document.createElement("div");
+        div_two.classList.add("flex_space")
+        about.append(cart_txt, div_two)
+
+        const seller = document.createElement("div");
+        seller.innerText = "Продавец: Garnier"
+
+        const counter = document.createElement("div");
+
+        const minus = document.createElement("input");
+        minus.type = "button"
+        minus.value = "-"
+
+        minus.classList.add("btn_width")
+        const amount = document.createElement("span");
+        amount.innerText = "1"
+        amount.classList.add("amount")
+
+        const plus = document.createElement("input")
+        plus.type = "button"
+        plus.value = "+"
+        plus.classList.add("btn_width")
+
+
+        div_two.append(seller, counter)
+
+        counter.classList.add("counter")
+        counter.append(minus, amount, plus)
+
+
+        const remove_price = document.createElement("div");
+        remove_price.classList.add("rem_price")
+        const remove = document.createElement("input");
+        const br = document.createElement("br")
+        remove.type = "button"
+        remove.value = "Удалить"
+        remove.classList.add("remove_btn")
+
+
+        const price = document.createElement("span");
+        price.innerText = "25 000"
+        const sum = document.createElement("span");
+        sum.innerText = "сум"
+
+        remove_price.append(remove, br, price, sum)
+
+
+        list_divs.append(submit, list_img, about, remove_price)
+
+
+        plus.onclick = () => {
+            amount.innerText++
+        }
+
+        minus.onclick = () => {
+            amount.innerText--
+        }
+}
+
+
+br()
